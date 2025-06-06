@@ -76,14 +76,19 @@
       }).join('');
     }
 
-    function segmentHead(str) {
-      const len = Math.floor(Math.random() * 2) + 2; // 2 or 3 characters
-      return str.slice(0, len);
-    }
-
     function addEnding(str) {
       const hearts = Math.floor(Math.random() * 3) + 1;
       return str + 'っ' + '♡'.repeat(hearts);
+    }
+
+    function segmentText(str) {
+      const result = [];
+      for (let i = 0; i < str.length; ) {
+        const len = Math.floor(Math.random() * 4) + 2; // 2-5 characters
+        result.push(str.slice(i, i + len));
+        i += len;
+      }
+      return result;
     }
 
     function tongueTied(str) {
@@ -98,14 +103,11 @@
       if (level === 'large') {
         const lisped = tongueTied(str);
         const withDakuten = addDakuten(lisped);
-        return addEnding(withDakuten);
+        return segmentText(withDakuten).map(addEnding).join('');
       }
       const withDakuten = addDakuten(str);
       if (level === 'medium') {
-        const headOriginal = segmentHead(str);
-        const head = addEnding(addDakuten(headOriginal));
-        const full = addEnding(withDakuten);
-        return head + full;
+        return segmentText(withDakuten).map(addEnding).join('');
       }
       return addEnding(withDakuten);
     }
