@@ -18,6 +18,12 @@
       background: #f0f0f0;
       padding: 1rem;
     }
+    #noise-buttons button {
+      margin-right: 0.5rem;
+    }
+    #noise-buttons button:disabled {
+      background: #ccc;
+    }
   </style>
 </head>
 <body>
@@ -25,9 +31,34 @@
   <p>テキストを入力すると末尾に促音とハートを追加します。</p>
   <textarea id="input" placeholder="ここにテキストを入力"></textarea>
   <br>
+  <div id="noise-buttons">
+    ノイズ:
+    <button data-level="small" class="noise-btn" id="noise-small">ノイズ小</button>
+    <button data-level="medium" class="noise-btn" id="noise-medium">ノイズ中</button>
+    <button data-level="large" class="noise-btn" id="noise-large">ノイズ大</button>
+    <button data-level="max" class="noise-btn" id="noise-max">ノイズ最大</button>
+  </div>
+  <br>
   <button id="convert">変換</button>
   <div id="output"></div>
   <script>
+    let noiseLevel = 'small';
+
+    function updateNoiseButtons() {
+      document.querySelectorAll('.noise-btn').forEach(btn => {
+        btn.disabled = btn.dataset.level === noiseLevel;
+      });
+    }
+
+    document.querySelectorAll('.noise-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        noiseLevel = btn.dataset.level;
+        updateNoiseButtons();
+      });
+    });
+
+    updateNoiseButtons();
+
     function addDakuten(str) {
       const voiceless = new Set([
         'か','き','く','け','こ','さ','し','す','せ','そ',
@@ -45,7 +76,7 @@
       }).join('');
     }
 
-    function toOhoVoice(str) {
+    function toOhoVoice(str, level = 'small') {
       const base = addDakuten(str);
       const hearts = Math.floor(Math.random() * 3) + 1;
       return base + 'っ' + '♡'.repeat(hearts);
@@ -53,7 +84,7 @@
 
     document.getElementById('convert').addEventListener('click', () => {
       const input = document.getElementById('input').value;
-      const output = toOhoVoice(input);
+      const output = toOhoVoice(input, noiseLevel);
       document.getElementById('output').textContent = output;
     });
   </script>
