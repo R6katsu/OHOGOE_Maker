@@ -28,9 +28,20 @@
   <button id="convert">変換</button>
   <div id="output"></div>
   <script>
+    function addDakuten(str) {
+      return Array.from(str).map(ch => {
+        const d = ch.normalize('NFD');
+        if (d.includes('\u3099') || d.includes('\u309A')) {
+          return ch;
+        }
+        return ch + '゛';
+      }).join('');
+    }
+
     function toOhoVoice(str) {
+      const base = addDakuten(str);
       const hearts = Math.floor(Math.random() * 3) + 1;
-      return str + 'っ' + '♡'.repeat(hearts);
+      return base + 'っ' + '♡'.repeat(hearts);
     }
 
     document.getElementById('convert').addEventListener('click', () => {
