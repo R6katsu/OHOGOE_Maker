@@ -88,13 +88,17 @@
       return result;
     }
 
+    function addEnding(str) {
+      const hearts = Math.floor(Math.random() * 3) + 1;
+      return str + 'っ' + '♡'.repeat(hearts);
+    }
+
     function toOhoVoice(str, level = 'small') {
       let result = addDakuten(str);
-      const hearts = Math.floor(Math.random() * 3) + 1;
-      result += 'っ' + '♡'.repeat(hearts);
       if (level === 'medium') {
         result = segmentText(result);
       }
+      result = addEnding(result);
       return result;
     }
 
