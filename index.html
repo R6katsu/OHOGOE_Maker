@@ -77,15 +77,14 @@
     }
 
     function segmentText(str) {
-      let result = '';
+      const segments = [];
       let i = 0;
       while (i < str.length) {
         const len = Math.floor(Math.random() * 4) + 2; // 2-5 characters
-        result += str.slice(i, i + len);
-        if (i + len < str.length) result += ' ';
+        segments.push(str.slice(i, i + len));
         i += len;
       }
-      return result;
+      return segments;
     }
 
     function addEnding(str) {
@@ -96,9 +95,11 @@
     function toOhoVoice(str, level = 'small') {
       let result = addDakuten(str);
       if (level === 'medium') {
-        result = segmentText(result);
+        const segments = segmentText(result).map(s => addEnding(s));
+        result = segments.join('');
+      } else {
+        result = addEnding(result);
       }
-      result = addEnding(result);
       return result;
     }
 
