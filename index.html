@@ -22,23 +22,15 @@
 </head>
 <body>
   <h1>オホ声メーカー</h1>
-  <p>テキストを入力するとオホ声に変換します。</p>
+  <p>テキストを入力すると末尾に促音とハートを追加します。</p>
   <textarea id="input" placeholder="ここにテキストを入力"></textarea>
   <br>
   <button id="convert">変換</button>
   <div id="output"></div>
   <script>
     function toOhoVoice(str) {
-      const vowels = 'aeiouAEIOUあいうえおアイウエオぁぃぅぇぉァィゥェォ';
-      let result = '';
-      for (const ch of str) {
-        if (vowels.includes(ch)) {
-          result += 'オホ';
-        } else {
-          result += ch;
-        }
-      }
-      return result;
+      const hearts = Math.floor(Math.random() * 3) + 1;
+      return str + 'っ' + '♡'.repeat(hearts);
     }
 
     document.getElementById('convert').addEventListener('click', () => {
