@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>促音メーカー</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+    }
+    #output {
+      margin-top: 1rem;
+      white-space: pre-wrap;
+      background: #f0f0f0;
+      padding: 1rem;
+    }
+    #noise-buttons button {
+      margin-right: 0.5rem;
+    }
+    #noise-buttons button:disabled {
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>促音メーカー</h1>
+  <p>テキストを入力すると末尾に促音と！を追加します。</p>
+  <textarea id="input" placeholder="ここにテキストを入力"></textarea>
+  <br>
+  <div id="noise-buttons">
+    ノイズ:
+    <button data-level="small" class="noise-btn" id="noise-small">ノイズ小</button>
+    <button data-level="medium" class="noise-btn" id="noise-medium">ノイズ中</button>
+    <button data-level="large" class="noise-btn" id="noise-large">ノイズ大</button>
+    <button data-level="max" class="noise-btn" id="noise-max">ノイズ最大</button>
+  </div>
+  <br>
+  <button id="convert">変換</button>
+  <div id="output"></div>
+  <script>
+    let noiseLevel = 'small';
+
+    function updateNoiseButtons() {
+      document.querySelectorAll('.noise-btn').forEach(btn => {
+        btn.disabled = btn.dataset.level === noiseLevel;
+      });
+    }
+
+    document.querySelectorAll('.noise-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        noiseLevel = btn.dataset.level;
+        updateNoiseButtons();
+      });
+    });
+
+    updateNoiseButtons();
+
+    function addDakuten(str) {
+      const voiceless = new Set([
+        'か','き','く','け','こ','さ','し','す','せ','そ',
+        'た','ち','つ','て','と','は','ひ','ふ','へ','ほ',
+        'カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ',
+        'タ','チ','ツ','テ','ト','ハ','ヒ','フ','ヘ','ホ',
+        'っ','ッ'
+      ]);
+      return Array.from(str).map(ch => {
+        const d = ch.normalize('NFD');
+        if (d.includes('\u3099') || d.includes('\u309A') || voiceless.has(ch)) {
+          return ch;
+        }
+        return ch + '゛';
+      }).join('');
+    }
+
+    function addEnding(str) {
+      const marks = Math.floor(Math.random() * 3) + 1;
+      return str + 'っ' + '！'.repeat(marks);
+    }
+
+    function segmentHead(str) {
+      const len = Math.floor(Math.random() * 2) + 2; // 2 or 3 characters
+      return str.slice(0, len);
+    }
+
+    function tongueTied(str) {
+      const map = {
+        'だ': 'ら', 'ぢ': 'り', 'づ': 'る', 'で': 'れ', 'ど': 'ろ',
+        'ダ': 'ラ', 'ヂ': 'リ', 'ヅ': 'ル', 'デ': 'レ', 'ド': 'ロ'
+      };
+      return str.replace(/[だぢづでどダヂヅデド]/g, ch => map[ch]);
+    }
+
+    function toSokuon(str, level = 'small') {
+      if (level === 'large') {
+        const lisped = tongueTied(str);
+        const headOriginal = segmentHead(lisped);
+        const head = addEnding(addDakuten(headOriginal));
+        const full = addEnding(addDakuten(lisped));
+        return head + full;
+      }
+      const withDakuten = addDakuten(str);
+      if (level === 'medium') {
+        const headOriginal = segmentHead(str);
+        const head = addEnding(addDakuten(headOriginal));
+        const full = addEnding(withDakuten);
+        return head + full;
+      }
+      return addEnding(withDakuten);
+    }
+
+    document.getElementById('convert').addEventListener('click', () => {
+      const input = document.getElementById('input').value;
+      const output = toSokuon(input, noiseLevel);
+      document.getElementById('output').textContent = output;
+    });
+  </script>
+</body>
+</html>
