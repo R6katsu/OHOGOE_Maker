@@ -79,8 +79,8 @@
     function segmentText(str) {
       const segments = [];
       let i = 0;
+      const len = 2; // first two characters, repeat without reselecting
       while (i < str.length) {
-        const len = Math.floor(Math.random() * 4) + 2; // 2-5 characters
         segments.push(str.slice(i, i + len));
         i += len;
       }
