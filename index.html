@@ -76,10 +76,26 @@
       }).join('');
     }
 
+    function segmentText(str) {
+      let result = '';
+      let i = 0;
+      while (i < str.length) {
+        const len = Math.floor(Math.random() * 4) + 2; // 2-5 characters
+        result += str.slice(i, i + len);
+        if (i + len < str.length) result += ' ';
+        i += len;
+      }
+      return result;
+    }
+
     function toOhoVoice(str, level = 'small') {
-      const base = addDakuten(str);
+      let result = addDakuten(str);
       const hearts = Math.floor(Math.random() * 3) + 1;
-      return base + 'っ' + '♡'.repeat(hearts);
+      result += 'っ' + '♡'.repeat(hearts);
+      if (level === 'medium') {
+        result = segmentText(result);
+      }
+      return result;
     }
 
     document.getElementById('convert').addEventListener('click', () => {
