@@ -29,9 +29,16 @@
   <div id="output"></div>
   <script>
     function addDakuten(str) {
+      const voiceless = new Set([
+        'か','き','く','け','こ','さ','し','す','せ','そ',
+        'た','ち','つ','て','と','は','ひ','ふ','へ','ほ',
+        'カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ',
+        'タ','チ','ツ','テ','ト','ハ','ヒ','フ','ヘ','ホ',
+        'っ','ッ'
+      ]);
       return Array.from(str).map(ch => {
         const d = ch.normalize('NFD');
-        if (d.includes('\u3099') || d.includes('\u309A')) {
+        if (d.includes('\u3099') || d.includes('\u309A') || voiceless.has(ch)) {
           return ch;
         }
         return ch + '゛';
