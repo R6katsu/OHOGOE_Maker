@@ -76,15 +76,9 @@
       }).join('');
     }
 
-    function segmentText(str) {
-      const segments = [];
-      let i = 0;
-      const len = 2; // first two characters, repeat without reselecting
-      while (i < str.length) {
-        segments.push(str.slice(i, i + len));
-        i += len;
-      }
-      return segments;
+    function segmentHead(str) {
+      const len = Math.floor(Math.random() * 2) + 2; // 2 or 3 characters
+      return str.slice(0, len);
     }
 
     function addEnding(str) {
@@ -93,14 +87,14 @@
     }
 
     function toOhoVoice(str, level = 'small') {
-      let result = addDakuten(str);
+      const withDakuten = addDakuten(str);
       if (level === 'medium') {
-        const segments = segmentText(result).map(s => addEnding(s));
-        result = segments.join('');
-      } else {
-        result = addEnding(result);
+        const headOriginal = segmentHead(str);
+        const head = addEnding(addDakuten(headOriginal));
+        const full = addEnding(withDakuten);
+        return head + full;
       }
-      return result;
+      return addEnding(withDakuten);
     }
 
     document.getElementById('convert').addEventListener('click', () => {
