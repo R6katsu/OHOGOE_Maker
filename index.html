@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>オホ声メーカー</title>
+  <title>促音メーカー</title>
   <style>
     body {
       font-family: sans-serif;
@@ -27,8 +27,8 @@
   </style>
 </head>
 <body>
-  <h1>オホ声メーカー</h1>
-  <p>テキストを入力すると末尾に促音とハートを追加します。</p>
+  <h1>促音メーカー</h1>
+  <p>テキストを入力すると末尾に促音と！を追加します。</p>
   <textarea id="input" placeholder="ここにテキストを入力"></textarea>
   <br>
   <div id="noise-buttons">
@@ -77,8 +77,8 @@
     }
 
     function addEnding(str) {
-      const hearts = Math.floor(Math.random() * 3) + 1;
-      return str + 'っ' + '♡'.repeat(hearts);
+      const marks = Math.floor(Math.random() * 3) + 1;
+      return str + 'っ' + '！'.repeat(marks);
     }
 
     function segmentHead(str) {
@@ -94,7 +94,7 @@
       return str.replace(/[だぢづでどダヂヅデド]/g, ch => map[ch]);
     }
 
-    function toOhoVoice(str, level = 'small') {
+    function toSokuon(str, level = 'small') {
       if (level === 'large') {
         const lisped = tongueTied(str);
         const headOriginal = segmentHead(lisped);
@@ -114,7 +114,7 @@
 
     document.getElementById('convert').addEventListener('click', () => {
       const input = document.getElementById('input').value;
-      const output = toOhoVoice(input, noiseLevel);
+      const output = toSokuon(input, noiseLevel);
       document.getElementById('output').textContent = output;
     });
   </script>
