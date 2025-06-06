@@ -81,33 +81,33 @@
       return str + 'っ' + '♡'.repeat(hearts);
     }
 
-    function segmentText(str) {
-      const result = [];
-      for (let i = 0; i < str.length; ) {
-        const len = Math.floor(Math.random() * 4) + 2; // 2-5 characters
-        result.push(str.slice(i, i + len));
-        i += len;
-      }
-      return result;
+    function segmentHead(str) {
+      const len = Math.floor(Math.random() * 2) + 2; // 2 or 3 characters
+      return str.slice(0, len);
     }
 
     function tongueTied(str) {
       const map = {
-        'ら': 'あ', 'り': 'い', 'る': 'う', 'れ': 'え', 'ろ': 'お',
-        'ラ': 'ア', 'リ': 'イ', 'ル': 'ウ', 'レ': 'エ', 'ロ': 'オ'
+        'だ': 'ら', 'ぢ': 'り', 'づ': 'る', 'で': 'れ', 'ど': 'ろ',
+        'ダ': 'ラ', 'ヂ': 'リ', 'ヅ': 'ル', 'デ': 'レ', 'ド': 'ロ'
       };
-      return str.replace(/[らりるれろラリルレロ]/g, ch => map[ch]);
+      return str.replace(/[だぢづでどダヂヅデド]/g, ch => map[ch]);
     }
 
     function toOhoVoice(str, level = 'small') {
       if (level === 'large') {
         const lisped = tongueTied(str);
-        const withDakuten = addDakuten(lisped);
-        return segmentText(withDakuten).map(addEnding).join('');
+        const headOriginal = segmentHead(lisped);
+        const head = addEnding(addDakuten(headOriginal));
+        const full = addEnding(addDakuten(lisped));
+        return head + full;
       }
       const withDakuten = addDakuten(str);
       if (level === 'medium') {
-        return segmentText(withDakuten).map(addEnding).join('');
+        const headOriginal = segmentHead(str);
+        const head = addEnding(addDakuten(headOriginal));
+        const full = addEnding(withDakuten);
+        return head + full;
       }
       return addEnding(withDakuten);
     }
