@@ -86,7 +86,20 @@
       return str + 'っ' + '♡'.repeat(hearts);
     }
 
+    function tongueTied(str) {
+      const map = {
+        'ら': 'あ', 'り': 'い', 'る': 'う', 'れ': 'え', 'ろ': 'お',
+        'ラ': 'ア', 'リ': 'イ', 'ル': 'ウ', 'レ': 'エ', 'ロ': 'オ'
+      };
+      return str.replace(/[らりるれろラリルレロ]/g, ch => map[ch]);
+    }
+
     function toOhoVoice(str, level = 'small') {
+      if (level === 'large') {
+        const lisped = tongueTied(str);
+        const withDakuten = addDakuten(lisped);
+        return addEnding(withDakuten);
+      }
       const withDakuten = addDakuten(str);
       if (level === 'medium') {
         const headOriginal = segmentHead(str);
